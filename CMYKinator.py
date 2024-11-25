@@ -20,7 +20,7 @@ def main():
     watermark_path = "watermark_image.png" # opens watermark path
     adjusted_image = watermark(adjusted_image, watermark_path, transparency=0, position=(100, 100)) #applies watermark
 
-    # converted image
+    # converts image to CMYK
     cmyk_image = rgb_to_cmyk(image)
 
     # adjust CMYK channels (choose value from 0-255)
@@ -37,23 +37,15 @@ def main():
     output_file = os.path.join(output_folder, "filename_CMYK_Adjusted.jpg")
     adjusted_image.save(output_file)
     print(f"Image saved as {output_file}")
-
-def rgb_to_cmyk(image):
-    """
-        Converts an RGB image to CMYK.
-        """
-    # check image's color profile
-    if image.mode != 'RGB':
-        raise ValueError("Input image must be in RGB mode")
-    
-    # Convert RGB to CMYK
-    cmyk_image = image.convert("CMYK")
-    return cmyk_image
  
 def watermark(image, watermark_path, transparency=128, position=(0, 0)):
     """
-        Adds a watermark to the CMYK image with transparency and position options.
-        Uses blending between the watermark and a background.
+        Open foreground image and background image
+        Adds a watermark to the image with transparency and position options.
+        Converts the image to RGBA if needed for the alpha channel/transparency.
+        Adjusts foreground image size (optional)
+        Positions foreground image
+        Blends the foreground image and background image.
         """
     # Open watermark image
     watermark = Image.open(watermark_path)
@@ -61,7 +53,30 @@ def watermark(image, watermark_path, transparency=128, position=(0, 0)):
     # Check if watermark image is in RGBA mode for alpha channel/transparency, if not convert it
     if watermark.mode != 'RGBA':
         watermark = watermark.convert("RGBA") 
+
+    # Resize watermark to a smaller size (optional, adjust as needed)
+    width = image.width // 4  # Resize to 25% of the original image size
+    height = image.height // 4
+    watermark_resized = watermark.resize((width, height))
+
+   
+
+    return final_image_rgb
+
+
+
+def rgb_to_cmyk(image):
+    """
+        Converts the image with applied watermark function to CMYK.
+        """
+    # check image's color profile
+    if image.mode != 'RGB':
+        raise ValueError("Input image must be in RGB mode")
     
+    # Convert RGB to CMYK
+    cmyk_image = image.convert("CMYK")
+    
+    return cmyk_image   
 
 
 
