@@ -16,9 +16,11 @@ def main():
 
     # Open the input file
     with Image.open(input_file) as image:
-    
+        #resize image
+        resized_image = resize_img(image, height=800)
+
         # adds watermark before converting entire image to cmyk
-        watermarked_image = watermark(image, watermark_path, transparency=128, position=(100, 100))
+        watermarked_image = watermark(resized_image, watermark_path, transparency=128, position=(100, 100))
 
         # converts image to CMYK
         cmyk_image = rgb_to_cmyk(watermarked_image)
