@@ -120,10 +120,16 @@ def adjust_yellow(cmyk_image, adjustment_value):
 
     return Image.merge("CMYK", (c, m, y, k))
 
-def adjust_black():
-# after rgb_to_cmyk converts image
-# function breaks apart cmyk channels and adjusts the black/k channel
+def adjust_black(cmyk_image, adjustment_value):
+    """
+        Adjust the black channel in the CMYK image.
+        Adjustment_value is a value between 0 and 255.
+        """
+    c, m, y, k = cmyk_image.split()
+    k = k.point(lambda i: i + adjustment_value)  # Adjust black
+    k = k.point(lambda i: max(min(i, 255), 0))  # Range is between 0 and 255
 
+    return Image.merge("CMYK", (c, m, y, k))
 
 def resize_img():
 # after rgb_to_cmyk converts image
