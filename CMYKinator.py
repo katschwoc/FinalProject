@@ -98,10 +98,16 @@ def adjust_cyan(cmyk_image, adjustment_value):
     return Image.merge("CMYK", (c, m, y, k))
 
 
-def adjust_magenta():
-# after rgb_to_cmyk converts image
-# function breaks apart cmyk channels and adjusts the magenta channel
+def adjust_magenta(cmyk_image, adjustment_value):
+    """
+        Adjust the Magenta channel in the CMYK image.
+        Adjustment_value is a value between 0 and 255.
+        """
+    c, m, y, k = cmyk_image.split()
+    m = m.point(lambda i: i + adjustment_value)  # Adjust magenta
+    m = m.point(lambda i: max(min(i, 255), 0))  # Range is between 0 and 255
 
+    return Image.merge("CMYK", (c, m, y, k))
 
 def adjust_yellow():
 # after rgb_to_cmyk converts image
