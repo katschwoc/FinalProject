@@ -2,10 +2,13 @@ import PIL
 
 def main():
 # main function that runs the program
+# saves the adjusted image in a new file called "CMYK"
+# saves the adjusted image as "filename_CMYK_Adjusted.jpg"
+
 
 
 def rgb_to_cmyk():
-# function converts rgb image to jpeg
+# function converts rgb image to jpeg if needed
 # function converts rgb image to cmyk
 
 
@@ -42,7 +45,6 @@ def adjust_contrast():
 
 def batch_render():
 # function batch renders images with similar file names such as "artworkRGB.jpg and drawingRGB.jpg"
-
 
 
 
