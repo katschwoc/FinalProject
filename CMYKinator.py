@@ -7,21 +7,18 @@ def main():
         """
     # input filename and path
     input_file = "input_image.jpg"
+    watermark_path = "watermark_image.png"
     output_folder = "CMYK_Images"
 
     # create output folder
     # check if output folder exists
     os.makedirs(output_folder, exist_ok=True)
 
-    # opens file
-    image = Image.open(input_file)
-
     # adds watermark before converting entire image to cmyk
-    watermark_path = "watermark_image.png" # opens watermark path
-    adjusted_image = watermark(adjusted_image, watermark_path, transparency=0, position=(100, 100)) #applies watermark
+    watermarked_image = watermark(input_file, watermark_path, transparency=128, position=(100, 100))
 
     # converts image to CMYK
-    cmyk_image = rgb_to_cmyk(image)
+    cmyk_image = rgb_to_cmyk(watermarked_image)
 
     # adjust CMYK channels (choose value from 0-255)
 
@@ -37,18 +34,6 @@ def main():
     output_file = os.path.join(output_folder, "filename_CMYK_Adjusted.jpg")
     adjusted_image.save(output_file)
     print(f"Image saved as {output_file}")
- 
-def watermark(image, watermark_path, transparency=128, position=(0, 0)):
-    """
-        Open foreground image and background image
-        Adds a watermark to the image with transparency and position options.
-        Converts the image to RGBA if needed for the alpha channel/transparency.
-        Adjusts foreground image size (optional)
-        Positions foreground image
-        Blends the foreground image and background image.
-        """
-
-from PIL import Image
 
 def watermark(image, watermark_path, transparency=128, position=(0, 0)):
     """
@@ -70,7 +55,19 @@ def watermark(image, watermark_path, transparency=128, position=(0, 0)):
         x = padding
         y = img.height - watermark.height - padding
         
-        # Alpha channel of the watermark for transparency
+        # If watermark is not in RGBA mode, convert it to RGBA to support transparency
+        if watermark_resized.mode != 'RGBA':
+            watermark_resized = watermark_resized.convert("RGBA")
+        
+        # Modify the transparency (alpha channel) of the watermark
+        watermark_data = watermark_resized.getdata()
+        new_watermark_data = []
+        for item in watermark_data:
+            r, g, b, a = item
+            a = int(a * (transparency / 255)) #adjust transparency (0-255)
+            new_watermark_data.append((r, g, b, a))
+        watermark_resized.putdata(new_watermark_data)
+
         img.paste(watermark_resized, (x, y), mask=watermark_resized.getchannel('A'))
         img.show()
 
@@ -82,6 +79,14 @@ def rgba_to_cmyk(image):
     """
         Converts the image from the watermark function to CMYK.
         """
+    # Ensure the image is in RGB mode first
+    if image.mode != 'RGB':
+        image = image.convert('RGB')
+
+    # Convert RGB to CMYK
+    cmyk_image = image.convert('CMYK')
+
+    return cmyk_image
 
 
 def adjust_cyan():
