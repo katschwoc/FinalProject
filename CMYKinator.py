@@ -47,37 +47,41 @@ def watermark(image, watermark_path, transparency=128, position=(0, 0)):
         Positions foreground image
         Blends the foreground image and background image.
         """
-    # Open watermark image
-    watermark = Image.open(watermark_path)
-    
-    # Check if watermark image is in RGBA mode for alpha channel/transparency, if not convert it
-    if watermark.mode != 'RGBA':
-        watermark = watermark.convert("RGBA") 
 
-    # Resize watermark to a smaller size (optional, adjust as needed)
-    width = image.width // 4  # Resize to 25% of the original image size
-    height = image.height // 4
-    watermark_resized = watermark.resize((width, height))
+from PIL import Image
 
-   
-
-    return final_image_rgb
-
-
-
-def rgb_to_cmyk(image):
+def watermark(image, watermark_path, transparency=128, position=(0, 0)):
     """
-        Converts the image with applied watermark function to CMYK.
-        """
-    # check image's color profile
-    if image.mode != 'RGB':
-        raise ValueError("Input image must be in RGB mode")
-    
-    # Convert RGB to CMYK
-    cmyk_image = image.convert("CMYK")
-    
-    return cmyk_image   
+    Adds a watermark to the image with transparency and position options.
+    Alpha channel for transparency adjustments.
+    Pasts the watermark onto the original image.
+    """
+    # Open the background image and the watermark (foreground) image using with statement
+    with (Image.open(image) as img, 
+        Image.open(watermark_path) as watermark):
+        
+        # Resize watermark if needed (optional, resizing to 25% of the original image size)
+        width = img.width // 4
+        height = img.height // 4
+        watermark_resized = watermark.resize((width, height))
+        
+        # Get the position (defaults to bottom-left)
+        padding = 50
+        x = padding
+        y = img.height - watermark.height - padding
+        
+        # Alpha channel of the watermark for transparency
+        img.paste(watermark_resized, (x, y), mask=watermark_resized.getchannel('A'))
+        img.show()
 
+        return img
+
+
+
+def rgba_to_cmyk(image):
+    """
+        Converts the image from the watermark function to CMYK.
+        """
 
 
 def adjust_cyan():
