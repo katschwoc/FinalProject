@@ -132,10 +132,15 @@ def adjust_black(cmyk_image, adjustment_value):
 
     return Image.merge("CMYK", (c, m, y, k))
 
-def resize_img():
-# after rgb_to_cmyk converts image
-# function resizes image
+def resize_img(img, height):
+    """
+        resize image while maintaining aspect ratio
+        """
+    aspect_ratio = img.width / img.height
+    resize_width = int(height * aspect_ratio)
+    resized_img = img.resize((resize_width, height))
 
+    return resized_img
 
 def adjust_contrast():
 # after rgb_to_cmyk converts image
