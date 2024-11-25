@@ -36,25 +36,30 @@ def main():
     adjusted_image.save(output_file)
     print(f"Image saved as {output_file}")
 
-def rgb_to_cmyk():
-# check image's color profile
-# function converts rgb image to cmyk
-
- """
-    Converts an RGB image to CMYK.
+def rgb_to_cmyk(image):
     """
+        Converts an RGB image to CMYK.
+        """
+    # check image's color profile
     if image.mode != 'RGB':
         raise ValueError("Input image must be in RGB mode")
     
     # Convert RGB to CMYK
     cmyk_image = image.convert("CMYK")
     return cmyk_image
+ 
+def watermark(image, watermark_path, transparency=128, position=(0, 0)):
+    """
+        Adds a watermark to the CMYK image with transparency and position options.
+        Uses blending between the watermark and a background.
+        """
+    # Open watermark image
+    watermark = Image.open(watermark_path)
+    
+    # Convert watermark to RGBA mode for transparency/alpha channel
+    watermark = watermark.convert("RGBA")
+    
 
-def watermark():
-# function overlays one image on top of the converted cmyk image
-# function includes a transparency option to adjust the overlaid image
-# function resizes overlaid image
-# function includes placement option 
 
 
 def adjust_cyan():
