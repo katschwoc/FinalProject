@@ -44,9 +44,8 @@ def watermark(image, watermark_path, transparency=128, position=(0, 0)):
     Alpha channel for transparency adjustments.
     Pasts the watermark onto the original image.
     """
-    # Open the background image and the watermark (foreground) image using with statement
-    with (Image.open(image) as img, 
-        Image.open(watermark_path) as watermark):
+    # Open the watermark (foreground) img
+    with Image.open(watermark_path) as watermark:
         
         # Resize watermark if needed (optional, resizing to 25% of the original image size)
         width = img.width // 4
@@ -56,7 +55,7 @@ def watermark(image, watermark_path, transparency=128, position=(0, 0)):
         # Get the position (defaults to bottom-left)
         padding = 50
         x = padding
-        y = img.height - watermark.height - padding
+        y = image.height - watermark.height - padding
         
         # If watermark is not in RGBA mode, convert it to RGBA to support transparency
         if watermark_resized.mode != 'RGBA':
@@ -74,7 +73,7 @@ def watermark(image, watermark_path, transparency=128, position=(0, 0)):
         img.paste(watermark_resized, (x, y), mask=watermark_resized.getchannel('A'))
         img.show()
 
-        return img
+        return image
 
 def rgba_to_cmyk(image):
     """
