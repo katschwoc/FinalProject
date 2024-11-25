@@ -73,8 +73,6 @@ def watermark(image, watermark_path, transparency=128, position=(0, 0)):
 
         return img
 
-
-
 def rgba_to_cmyk(image):
     """
         Converts the image from the watermark function to CMYK.
@@ -88,10 +86,16 @@ def rgba_to_cmyk(image):
 
     return cmyk_image
 
+def adjust_cyan(cmyk_image, adjustment_value):
+    """
+        Adjust the Cyan channel in the CMYK image.
+        Adjustment_value is a value between 0 and 255.
+        """
+    c, m, y, k = cmyk_image.split()
+    c = c.point(lambda i: i + adjustment_value)  # Adjust cyan
+    c = c.point(lambda i: max(min(i, 255), 0))  # Range is between 0 and 255
 
-def adjust_cyan():
-# after rgb_to_cmyk converts image
-# function breaks apart cmyk channels and adjusts the cyan channel
+    return Image.merge("CMYK", (c, m, y, k))
 
 
 def adjust_magenta():
