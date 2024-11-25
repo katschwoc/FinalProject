@@ -3,15 +3,27 @@ import os
 
 def main():
 # main function that runs the program
+# opens file
+# create output folder 
+# check if output folder exists
+# applies adjustments
 # saves the adjusted image as "filename_CMYK_Adjusted.jpg"
 
 
 
 def rgb_to_cmyk():
-# opens the rgb images
-# function converts rgb image to jpeg if needed
+# check image's color profile
 # function converts rgb image to cmyk
 
+ """
+    Converts an RGB image to CMYK.
+    """
+    if image.mode != 'RGB':
+        raise ValueError("Input image must be in RGB mode")
+    
+    # Convert RGB to CMYK
+    cmyk_image = image.convert("CMYK")
+    return cmyk_image
 
 def watermark():
 # function overlays one image on top of the converted cmyk image
