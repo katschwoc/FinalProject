@@ -16,6 +16,10 @@ def main():
     # opens file
     image = Image.open(input_file)
 
+    # adds watermark before converting entire image to cmyk
+    watermark_path = "watermark_image.png" # opens watermark path
+    adjusted_image = watermark(adjusted_image, watermark_path, transparency=0, position=(100, 100)) #applies watermark
+
     # converted image
     cmyk_image = rgb_to_cmyk(image)
 
@@ -28,8 +32,6 @@ def main():
 
     # applies adjustments
     adjusted_image = adjust_contrast(cmyk_image, factor=0) # contrast
-    watermark_path = "watermark_image.png" # opens watermark path
-    adjusted_image = watermark(adjusted_image, watermark_path, transparency=0, position=(100, 100)) #applies watermark
     
     # saves the adjusted image as "filename_CMYK_Adjusted.jpg"
     output_file = os.path.join(output_folder, "filename_CMYK_Adjusted.jpg")
@@ -56,8 +58,9 @@ def watermark(image, watermark_path, transparency=128, position=(0, 0)):
     # Open watermark image
     watermark = Image.open(watermark_path)
     
-    # Convert watermark to RGBA mode for transparency/alpha channel
-    watermark = watermark.convert("RGBA")
+    # Check if watermark image is in RGBA mode for alpha channel/transparency, if not convert it
+    if watermark.mode != 'RGBA':
+        watermark = watermark.convert("RGBA") 
     
 
 
