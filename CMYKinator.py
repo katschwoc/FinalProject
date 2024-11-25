@@ -2,14 +2,39 @@ from PIL import Image, ImageEnhance, ImageFilter
 import os
 
 def main():
-# main function that runs the program
-# opens file
-# create output folder 
-# check if output folder exists
-# applies adjustments
-# saves the adjusted image as "filename_CMYK_Adjusted.jpg"
+    """
+        Main function that calls the program.
+        """
+    # input filename and path
+    input_file = "input_image.jpg"
+    output_folder = "CMYK_Images"
 
+    # create output folder
+    # check if output folder exists
+    os.makedirs(output_folder, exist_ok=True)
 
+    # opens file
+    image = Image.open(input_file)
+
+    # converted image
+    cmyk_image = rgb_to_cmyk(image)
+
+    # adjust CMYK channels (choose value from 0-255)
+
+    cmyk_image = adjust_cyan(cmyk_image, adjustment_value=0)   # Adjust cyan
+    cmyk_image = adjust_magenta(cmyk_image, adjustment_value=0)  # Adjust magenta
+    cmyk_image = adjust_yellow(cmyk_image, adjustment_value=0)  # Adjust yellow
+    cmyk_image = adjust_black(cmyk_image, adjustment_value=0)    # Adjust black
+
+    # applies adjustments
+    adjusted_image = adjust_contrast(cmyk_image, factor=0) # contrast
+    watermark_path = "watermark_image.png" # opens watermark path
+    adjusted_image = watermark(adjusted_image, watermark_path, transparency=0, position=(100, 100)) #applies watermark
+    
+    # saves the adjusted image as "filename_CMYK_Adjusted.jpg"
+    output_file = os.path.join(output_folder, "filename_CMYK_Adjusted.jpg")
+    adjusted_image.save(output_file)
+    print(f"Image saved as {output_file}")
 
 def rgb_to_cmyk():
 # check image's color profile
