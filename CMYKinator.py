@@ -14,26 +14,29 @@ def main():
     # check if output folder exists
     os.makedirs(output_folder, exist_ok=True)
 
-    # adds watermark before converting entire image to cmyk
-    watermarked_image = watermark(input_file, watermark_path, transparency=128, position=(100, 100))
-
-    # converts image to CMYK
-    cmyk_image = rgb_to_cmyk(watermarked_image)
-
-    # adjust CMYK channels (choose value from 0-255)
-
-    cmyk_image = adjust_cyan(cmyk_image, adjustment_value=0)   # Adjust cyan
-    cmyk_image = adjust_magenta(cmyk_image, adjustment_value=0)  # Adjust magenta
-    cmyk_image = adjust_yellow(cmyk_image, adjustment_value=0)  # Adjust yellow
-    cmyk_image = adjust_black(cmyk_image, adjustment_value=0)    # Adjust black
-
-    # applies adjustments
-    adjusted_image = adjust_contrast(cmyk_image, factor=0) # contrast
+    # Open the input file
+    with Image.open(input_file) as image:
     
-    # saves the adjusted image as "filename_CMYK_Adjusted.jpg"
-    output_file = os.path.join(output_folder, "filename_CMYK_Adjusted.jpg")
-    adjusted_image.save(output_file)
-    print(f"Image saved as {output_file}")
+        # adds watermark before converting entire image to cmyk
+        watermarked_image = watermark(image, watermark_path, transparency=128, position=(100, 100))
+
+        # converts image to CMYK
+        cmyk_image = rgb_to_cmyk(watermarked_image)
+
+        # adjust CMYK channels (choose value from 0-255)
+
+        cmyk_image = adjust_cyan(cmyk_image, adjustment_value=0)   # Adjust cyan
+        cmyk_image = adjust_magenta(cmyk_image, adjustment_value=0)  # Adjust magenta
+        cmyk_image = adjust_yellow(cmyk_image, adjustment_value=0)  # Adjust yellow
+        cmyk_image = adjust_black(cmyk_image, adjustment_value=0)    # Adjust black
+
+        # applies adjustments
+        adjusted_image = adjust_contrast(cmyk_image, factor=0) # contrast
+        
+        # saves the adjusted image as "filename_CMYK_Adjusted.jpg"
+        output_file = os.path.join(output_folder, "filename_CMYK_Adjusted.jpg")
+        adjusted_image.save(output_file)
+        print(f"Image saved as {output_file}")
 
 def watermark(image, watermark_path, transparency=128, position=(0, 0)):
     """
@@ -96,7 +99,6 @@ def adjust_cyan(cmyk_image, adjustment_value):
     c = c.point(lambda i: max(min(i, 255), 0))  # Range is between 0 and 255
 
     return Image.merge("CMYK", (c, m, y, k))
-
 
 def adjust_magenta(cmyk_image, adjustment_value):
     """
