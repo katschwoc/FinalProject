@@ -16,7 +16,7 @@ def main():
         resized_image = resize_img(image, height=720)
 
         # Add watermark before converting to CMYK
-        watermarked_image = watermark(resized_image, watermark_path,transparency=128, position=(0, 0)) #adjust transparency and position
+        watermarked_image = watermark(resized_image, watermark_path,transparency=50, position=(0, 0)) #adjust transparency and position
 
         # Convert image to CMYK
         cmyk_image = rgba_to_cmyk(watermarked_image)
