@@ -13,10 +13,10 @@ def main():
 
     with Image.open(input_file) as image:
         # Resize image
-        resized_image = resize_img(image, height=1080)
+        resized_image = resize_img(image, height=720)
 
         # Add watermark before converting to CMYK
-        watermarked_image = watermark(resized_image, watermark_path)
+        watermarked_image = watermark(resized_image, watermark_path,transparency=128, position=(0, 0)) #adjust transparency and position
 
         # Convert image to CMYK
         cmyk_image = rgba_to_cmyk(watermarked_image)
@@ -42,7 +42,7 @@ def watermark(image, watermark_path, transparency=128, position=(0, 0)):
     with Image.open(watermark_path) as watermark:
         
         aspect_ratio = watermark.width / watermark.height
-        resize_height = int(image.height * 0.25)  # Resize watermark to 25% of image height
+        resize_height = int(image.height * 0.15)  # Resize watermark to 25% of image height
         resize_width = int(resize_height * aspect_ratio)
         watermark_resized = watermark.resize((resize_width, resize_height))
 
@@ -58,7 +58,7 @@ def watermark(image, watermark_path, transparency=128, position=(0, 0)):
         new_watermark_data = []
         for item in watermark_data:
             r, g, b, a = item
-            a = int(a * (transparency / 255))  # Adjust transparency (0-255)
+            a = int(a * (transparency / 150))  # Adjust transparency (0-255)
             new_watermark_data.append((r, g, b, a))
         watermark_resized.putdata(new_watermark_data)
 
