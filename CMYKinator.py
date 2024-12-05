@@ -5,8 +5,8 @@ def main():
     """
     Main function that runs the program.
     """
-    input_file = "image1.png"
-    watermark_path = "image2.png"
+    input_file = "XianleWar_RGB.png"
+    watermark_path = "watermark.png"
     output_folder = "CMYK_Images"
 
     os.makedirs(output_folder, exist_ok=True)
